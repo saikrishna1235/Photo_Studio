@@ -5,11 +5,11 @@
 </head>
 <body>
 
-<h1>Photo Gallery</h1>
+<h1>Gallery</h1>
 <div id="gallery"></div>
 
 <script>
-const url = "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/data.json";
+const url = "https://raw.githubusercontent.com/saikrishna1235/Photo_Studio/main/data.json";
 
 fetch(url)
   .then(res => res.json())
@@ -17,16 +17,13 @@ fetch(url)
     const gallery = document.getElementById("gallery");
 
     data.photos.forEach(photo => {
-      const div = document.createElement("div");
-
-      div.innerHTML = `
-        <h3>${photo.title}</h3>
-        <img src="${photo.image}" width="200"/>
-        <p>${photo.description}</p>
-        <hr/>
+      gallery.innerHTML += `
+        <div>
+          <h3>${photo.title}</h3>
+          <img src="${photo.image}" width="200"/>
+          <p>${photo.description}</p>
+        </div>
       `;
-
-      gallery.appendChild(div);
     });
   });
 </script>
