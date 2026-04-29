@@ -1,13 +1,3 @@
 {
-  "photos": [
-    {
-      "title": "sadf",
-      "image": "dsfg",
-      "description": "sdfg"
-    },
-    {
-      "title": "dsfg",
-      "description": "sadfg"
-    }
-  ]
+  "photos": []
 }
