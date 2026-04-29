@@ -5,13 +5,13 @@ export default async function handler(req, res) {
 
   const { fileName, content, title, description } = req.body;
 
-  const TOKEN = "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";
+  const TOKEN = process.env.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; // ✅ FIXED
   const OWNER = "saikrishna1235";
   const REPO = "Photo_Studio";
 
   try {
     // Upload image
-    await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/images/${fileName}`, {
+    const uploadRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/images/${fileName}`, {
       method: "PUT",
       headers: {
         Authorization: `token ${TOKEN}`,
@@ -23,6 +23,12 @@ export default async function handler(req, res) {
       })
     });
 
+    if (!uploadRes.ok) {
+      const err = await uploadRes.json();
+      console.error("Upload error:", err);
+      return res.status(500).json({ success: false });
+    }
+
     // Get JSON
     const fileRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/data.json`, {
       headers: {
@@ -33,7 +39,7 @@ export default async function handler(req, res) {
     const file = await fileRes.json();
 
     if (!file.content) {
-      console.error(file);
+      console.error("Fetch JSON error:", file);
       return res.status(500).json({ success: false });
     }
 
@@ -47,7 +53,7 @@ export default async function handler(req, res) {
     });
 
     // Update JSON
-    await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/data.json`, {
+    const updateRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/data.json`, {
       method: "PUT",
       headers: {
         Authorization: `token ${TOKEN}`,
@@ -59,6 +65,12 @@ export default async function handler(req, res) {
         sha: file.sha
       })
     });
+
+    if (!updateRes.ok) {
+      const err = await updateRes.json();
+      console.error("Update JSON error:", err);
+      return res.status(500).json({ success: false });
+    }
 
     res.status(200).json({ success: true });
 
