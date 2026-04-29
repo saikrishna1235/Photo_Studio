@@ -1,3 +1,9 @@
 {
-  "photos": []
+  "photos": [
+    {
+      "title": "sadfg",
+      "image": "https://raw.githubusercontent.com/saikrishna1235/Photo_Studio/main/images/1777468733330_WIN_20260312_20_31_09_Pro.jpg",
+      "description": "asdsfgtry"
+    }
+  ]
 }
