@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+</head>
+<body>
+
+<h1>Add Photo</h1>
+
+<form id="form">
+  <input type="text" id="title" placeholder="Title" required><br><br>
+  <input type="text" id="image" placeholder="Image URL" required><br><br>
+  <textarea id="description" placeholder="Description"></textarea><br><br>
+  <button type="submit">Add Photo</button>
+</form>
+
+<script>
+const TOKEN = "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";
+const OWNER = "saikrishna1235";
+const REPO = "https://github.com/saikrishna1235/Photo_Studio.git";
+const FILE_PATH = "data.json";
+
+async function updateJSON(newPhoto) {
+  const api = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
+
+  // Get existing file
+  const res = await fetch(api, {
+    headers: {
+      Authorization: `token ${TOKEN}`
+    }
+  });
+
+  const file = await res.json();
+  const content = JSON.parse(atob(file.content));
+
+  // Add new photo
+  content.photos.push(newPhoto);
+
+  // Update file
+  await fetch(api, {
+    method: "PUT",
+    headers: {
+      Authorization: `token ${TOKEN}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      message: "Added new photo",
+      content: btoa(JSON.stringify(content, null, 2)),
+      sha: file.sha
+    })
+  });
+
+  alert("Photo added! Refresh gallery.");
+}
+
+document.getElementById("form").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const newPhoto = {
+    title: document.getElementById("title").value,
+    image: document.getElementById("image").value,
+    description: document.getElementById("description").value
+  };
+
+  updateJSON(newPhoto);
+});
+</script>
+
+</body>
+</html>

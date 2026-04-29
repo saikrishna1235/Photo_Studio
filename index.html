@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Photo Studio</title>
+</head>
+<body>
+
+<h1>Photo Gallery</h1>
+<div id="gallery"></div>
+
+<script>
+const url = "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/data.json";
+
+fetch(url)
+  .then(res => res.json())
+  .then(data => {
+    const gallery = document.getElementById("gallery");
+
+    data.photos.forEach(photo => {
+      const div = document.createElement("div");
+
+      div.innerHTML = `
+        <h3>${photo.title}</h3>
+        <img src="${photo.image}" width="200"/>
+        <p>${photo.description}</p>
+        <hr/>
+      `;
+
+      gallery.appendChild(div);
+    });
+  });
+</script>
+
+</body>
+</html>
