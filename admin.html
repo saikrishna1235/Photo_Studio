@@ -9,19 +9,19 @@
 
 <form id="form">
   <input type="text" id="title" placeholder="Title" required><br><br>
-  <input type="text" id="image" placeholder="Image URL" required><br><br>
+  <input type="file" id="imageFile" accept="image/*" required>
   <textarea id="description" placeholder="Description"></textarea><br><br>
   <button type="submit">Add Photo</button>
 </form>
 
 <script>
-const TOKEN = "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";
+const TOKEN = "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";
 const OWNER = "saikrishna1235";
-const REPO = "https://github.com/saikrishna1235/Photo_Studio.git";
+const REPO = "Photo_Studio.git";
 const FILE_PATH = "data.json";
 
 async function updateJSON(newPhoto) {
-  const api = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
+  const api =  `https://api.github.com/repos/saikrishna1235/Photo_Studio/contents/data.json`;
 
   // Get existing file
   const res = await fetch(api, {
@@ -53,17 +53,40 @@ async function updateJSON(newPhoto) {
   alert("Photo added! Refresh gallery.");
 }
 
-document.getElementById("form").addEventListener("submit", function(e) {
+document.getElementById("form").addEventListener("submit", async function(e) {
   e.preventDefault();
+
+  const file = document.getElementById("imageFile").files[0];
+
+  if (!file) {
+    alert("Please select an image");
+    return;
+  }
+
+  // Upload image first
+  const imageUrl = await uploadImage(file);
 
   const newPhoto = {
     title: document.getElementById("title").value,
-    image: document.getElementById("image").value,
+    image: imageUrl,
     description: document.getElementById("description").value
   };
 
   updateJSON(newPhoto);
 });
+async function uploadImage(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "YOUR_UPLOAD_PRESET");
+
+  const res = await fetch("https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload", {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+  return data.secure_url;
+}
 </script>
 
 </body>
